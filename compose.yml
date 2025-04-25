@@ -1,0 +1,13 @@
+services:
+  api:
+    container_name: rust-api
+    build:
+      context: .
+      dockerfile: ./docker/local/rust/Dockerfile
+    command: cargo watch -x run
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+    tty: true
+    stdin_open: true
