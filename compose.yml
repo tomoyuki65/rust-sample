@@ -9,5 +9,7 @@ services:
       - .:/app
     ports:
       - "8080:8080"
+    env_file:
+      - ./.env
     tty: true
     stdin_open: true

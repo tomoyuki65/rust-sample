@@ -1,4 +1,5 @@
-docker/
+docker
 compose.yml
 .gitignore
 *.md
+target
