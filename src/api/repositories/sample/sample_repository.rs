@@ -6,7 +6,7 @@ pub async fn sample_hello() -> Result<String, CommonError> {
     let text = "Sample Hello !!".to_string();
 
     if text.is_empty() {
-        return Err(CommonError::InternalServerError)
+        return Err(CommonError::InternalServerError);
     }
 
     Ok(text)

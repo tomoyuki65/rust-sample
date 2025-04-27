@@ -9,3 +9,6 @@ RUN cargo install cargo-watch
 
 # Rust用のリンターをインストール
 RUN rustup component add clippy
+
+# Rust用のフォーマッターをインストール
+RUN rustup component add rustfmt

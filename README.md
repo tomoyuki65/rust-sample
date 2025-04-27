@@ -30,7 +30,12 @@ docker compose down
 ## コード修正後に使うコマンド
 ローカルサーバー起動中に以下のコマンドを実行可能です。  
   
-### 1. コード解析チェック
+### 1. フォーマット修正
+```
+docker compose exec api cargo fmt
+```  
+  
+### 2. コード解析チェック
 ```
 docker compose exec api cargo clippy
 ```  

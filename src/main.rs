@@ -1,8 +1,5 @@
 // axum
-use axum::{
-    Router,
-    serve,
-};
+use axum::{Router, serve};
 
 // apiモジュール
 mod api;

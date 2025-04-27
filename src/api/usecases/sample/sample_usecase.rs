@@ -1,7 +1,7 @@
 // axum
 use axum::{
-    response::{Response, IntoResponse, Json},
-    http::{StatusCode},
+    http::StatusCode,
+    response::{IntoResponse, Json, Response},
 };
 
 // json変換用マクロ
@@ -26,55 +26,42 @@ pub async fn sample_get_usecase() -> Response {
             let msg = Json(json!({ "message": err.to_string()}));
 
             // レスポンス結果の設定
-            let res = (
-                StatusCode::INTERNAL_SERVER_ERROR,
-                msg,
-            ).into_response();
+            let res = (StatusCode::INTERNAL_SERVER_ERROR, msg).into_response();
 
             // 戻り値としてレスポンス結果を返す
-            return res
-        },
+            return res;
+        }
     };
 
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
     // レスポンス結果を設定して戻り値として返す
-    (
-        StatusCode::OK,
-        msg,
-    ).into_response()
+    (StatusCode::OK, msg).into_response()
 }
 
 // GETメソッドかつパスパラメータとクエリパラメータ有りのサンプルユースケース
-pub async fn sample_get_path_query_usecase(
-    id: String,
-    params: QueryParams,
-) -> Response {
-    let text = format!("id: {}, item: {}", id, params.item.unwrap_or("".to_string()));
+pub async fn sample_get_path_query_usecase(id: String, params: QueryParams) -> Response {
+    let text = format!(
+        "id: {}, item: {}",
+        id,
+        params.item.unwrap_or("".to_string())
+    );
 
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
     // レスポンス結果を設定して戻り値として返す
-    (
-        StatusCode::OK,
-        msg,
-    ).into_response()
+    (StatusCode::OK, msg).into_response()
 }
 
 // POSTメソッドのサンプルユースケース
-pub async fn sample_post_usecase(
-    body: RequestBody,
-) -> Response {
+pub async fn sample_post_usecase(body: RequestBody) -> Response {
     let text = format!("name: {}", body.name);
 
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
     // レスポンス結果を設定して戻り値として返す
-    (
-        StatusCode::OK,
-        msg,
-    ).into_response()
+    (StatusCode::OK, msg).into_response()
 }

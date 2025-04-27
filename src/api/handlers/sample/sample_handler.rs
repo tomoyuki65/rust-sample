@@ -1,11 +1,11 @@
 // axum
 use axum::{
     extract::{Path, Query},
-    response::{Response, Json},
+    response::{Json, Response},
 };
 
 // 変換用のクレート
-use serde::{Deserialize};
+use serde::Deserialize;
 
 // サービス用のモジュール
 use crate::api::usecases::sample::sample_usecase;
@@ -36,8 +36,6 @@ pub async fn sample_get_path_query(
 }
 
 // POSTメソッド用のAPIサンプル
-pub async fn sample_post(
-    Json(body): Json<RequestBody>,
-) -> Response {
+pub async fn sample_post(Json(body): Json<RequestBody>) -> Response {
     sample_usecase::sample_post_usecase(body).await
 }
