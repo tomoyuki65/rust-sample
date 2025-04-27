@@ -27,3 +27,11 @@ docker compose down
   
 <br />
   
+## コード修正後に使うコマンド
+ローカルサーバー起動中に以下のコマンドを実行可能です。  
+  
+### 1. コード解析チェック
+```
+docker compose exec api cargo clippy
+```  
+  

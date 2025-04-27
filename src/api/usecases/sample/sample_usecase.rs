@@ -39,14 +39,11 @@ pub async fn sample_get_usecase() -> Response {
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
-    // レスポンス結果の設定
-    let res = (
+    // レスポンス結果を設定して戻り値として返す
+    (
         StatusCode::OK,
         msg,
-    ).into_response();
-
-    // 戻り値としてレスポンス結果を返す
-    res
+    ).into_response()
 }
 
 // GETメソッドかつパスパラメータとクエリパラメータ有りのサンプルユースケース
@@ -59,14 +56,11 @@ pub async fn sample_get_path_query_usecase(
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
-    // レスポンス結果の設定
-    let res = (
+    // レスポンス結果を設定して戻り値として返す
+    (
         StatusCode::OK,
         msg,
-    ).into_response();
-
-    // 戻り値としてレスポンス結果を返す
-    res
+    ).into_response()
 }
 
 // POSTメソッドのサンプルユースケース
@@ -78,12 +72,9 @@ pub async fn sample_post_usecase(
     // json形式のメッセージを設定
     let msg = Json(json!({ "message": text}));
 
-    // レスポンス結果の設定
-    let res = (
+    // レスポンス結果を設定して戻り値として返す
+    (
         StatusCode::OK,
         msg,
-    ).into_response();
-
-    // 戻り値としてレスポンス結果を返す
-    res
+    ).into_response()
 }
