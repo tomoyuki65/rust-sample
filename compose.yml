@@ -9,7 +9,11 @@ services:
       - .:/app
     ports:
       - "8080:8080"
-    env_file:
+    env_file: 
       - ./.env
+    environment:
+      - ENV
+      - PORT
+      - RUST_LOG
     tty: true
     stdin_open: true

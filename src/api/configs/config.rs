@@ -10,6 +10,10 @@ fn default_port() -> u16 {
     8080
 }
 
+fn default_rust_log() -> String {
+    "info".to_string()
+}
+
 // 環境変数の構造体
 #[derive(Deserialize, Debug)]
 pub struct Config {
@@ -17,6 +21,8 @@ pub struct Config {
     pub env: String,
     #[serde(default = "default_port")]
     pub port: u16,
+    #[serde(default = "default_rust_log")]
+    pub _rust_log: String,
 }
 
 // 環境変数を返す関数
@@ -30,6 +36,7 @@ pub fn get_config() -> Config {
             Config {
                 env: default_env(),
                 port: default_port(),
+                _rust_log: default_rust_log(),
             }
         }
     }

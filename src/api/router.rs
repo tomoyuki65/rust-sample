@@ -1,11 +1,14 @@
 // axum
 use axum::{
-    Router,
+    Router, middleware,
     routing::{get, post},
 };
 
 // ハンドラー用のモジュール
 use super::handlers::sample::sample_handler;
+
+// ミドルウェア用のモジュール
+use super::middleware::common_middleware;
 
 pub fn router() -> Router {
     // APIのグループ「v1」
@@ -18,5 +21,8 @@ pub fn router() -> Router {
         .route("/sample/post", post(sample_handler::sample_post));
 
     // ルーティング
-    Router::new().nest("/api/v1", v1)
+    Router::new()
+        .nest("/api/v1", v1)
+        // 共通ミドルウェアの設定
+        .layer(middleware::from_fn(common_middleware::request_middleware))
 }

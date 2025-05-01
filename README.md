@@ -19,6 +19,7 @@ cp ./.env.example ./.env
 docker compose build --no-cache
 docker compose up -d
 ```  
+> <span style="color:red">※テストコードを実行させる際はテスト用の環境変数ファイルを使うため、「docker compose --env-file ./.env.testing up -d」で起動すること。</span>
   
 ### 3. コンテナの停止・削除
 ```
