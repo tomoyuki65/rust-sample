@@ -11,7 +11,7 @@ use serde_json::json;
 use crate::api::contexts::context::Context;
 
 // ロガー用のモジュール
-use crate::api::logger::env_logger::error;
+use crate::api::loggers::logger::error;
 
 // サービスのモジュール
 use crate::api::services::sample::sample_service::{SampleService, SampleServiceTrait};

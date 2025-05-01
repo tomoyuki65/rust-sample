@@ -8,7 +8,7 @@ use crate::api::errors::error::CommonError;
 use crate::api::repositories::sample::sample_repository::SampleRepositoryTrait;
 
 // ロガー用のモジュール
-use crate::api::logger::env_logger::error;
+use crate::api::loggers::logger::error;
 
 // 使用するリポジトリーをまとめる構造体
 pub struct SampleCommonRepository {

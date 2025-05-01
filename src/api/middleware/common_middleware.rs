@@ -13,7 +13,7 @@ use uuid::Uuid;
 use crate::api::contexts::context;
 
 // ロガー用のモジュール
-use crate::api::logger::env_logger::info;
+use crate::api::loggers::logger::info;
 
 pub async fn request_middleware(mut req: Request, next: Next) -> Response {
     // リクエストヘッダー「X-Request-Id」にUUIDを設定

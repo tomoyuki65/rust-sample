@@ -5,7 +5,7 @@ use crate::api::contexts::context::Context;
 use crate::api::errors::error::CommonError;
 
 // ロガー用のモジュール
-use crate::api::logger::env_logger::error;
+use crate::api::loggers::logger::error;
 
 // サンプルリポジトリーの構造体
 pub struct SampleRepository;

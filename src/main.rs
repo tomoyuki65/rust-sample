@@ -11,7 +11,7 @@ use api::router::router;
 use api::configs::config;
 
 // loggerモジュール
-use api::logger::env_logger::init_logger;
+use api::loggers::logger::init_logger;
 
 #[tokio::main]
 async fn main() {
