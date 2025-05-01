@@ -17,14 +17,18 @@ use crate::api::handlers::sample::sample_handler::RequestBody;
 pub struct SamplePostUsecase;
 
 impl SamplePostUsecase {
-    pub async fn exec(&self, _ctx: Context, body: RequestBody) -> Response {
+    pub async fn exec(&self, ctx: Context, body: RequestBody) -> Response {
         // テキスト設定
         let text = format!("name: {}", body.name);
 
         // json形式のメッセージを設定
         let msg = Json(json!({ "message": text}));
 
+        // レスポンスヘッダーに付与する値の設定
+        let x_request_id = ctx.header.get("X-Request-Id");
+        let request_id = x_request_id.expect("-").to_str().unwrap();
+
         // レスポンス結果を設定して戻り値として返す
-        (StatusCode::OK, msg).into_response()
+        (StatusCode::OK, [("X-Request-Id", request_id)], msg).into_response()
     }
 }

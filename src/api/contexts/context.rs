@@ -2,7 +2,7 @@
 use axum::{extract::Request, http::header::HeaderMap};
 
 // 共通コンテキストの構造体
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Context {
     pub header: HeaderMap,
     pub method: String,

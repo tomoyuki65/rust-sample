@@ -1,10 +1,13 @@
 // axum
 use axum::{
-    extract::Request,
+    extract::{Request, Json},
     http::StatusCode,
     middleware::Next,
     response::{IntoResponse, Response},
 };
+
+// json変換用マクロ
+use serde_json::json;
 
 // UUID
 use uuid::Uuid;
@@ -26,25 +29,39 @@ pub async fn request_middleware(mut req: Request, next: Next) -> Response {
     req.extensions_mut().insert(ctx.clone());
 
     // リクエスト単位でログ出力
-    info(&ctx, "");
+    info(&ctx, "start request !!");
 
     next.run(req).await
 }
 
+// 認証用ミドルウェア
+// ※利用する場合に関数名を「auth_middleware」に修正する
 pub async fn _auth_middleware(req: Request, next: Next) -> Response {
-    // Authorizationヘッダーを取得
-    let h = req.headers().get("Authorization");
+    // 共通コンテキストからX-Request-Idを取得
+    let request_id = match req.extensions().get::<context::Context>() {
+        Some(ctx) => {
+            let x_request_id = ctx.header.get("X-Request-Id");
+            x_request_id.expect("-").to_str().unwrap()
+        }
+        None => "-",
+    };
 
-    if h.is_none() {
-        return (StatusCode::BAD_REQUEST, "").into_response();
-    }
+    // Authorizationヘッダーからトークン値を取得
+    let token = match req.headers().get("Authorization") {
+        Some(value) => {
+            let bearer_token = value.to_str().unwrap();
+            bearer_token.replace("Bearer ", "")
+        },
+        None => {
+            let msg = Json(json!({ "message": "Bad Request"}));
+            return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response()
+        },
+    };
 
-    // Bearerトークンを取得
-    let bearer_token = h.expect("").to_str().unwrap();
-    let token = bearer_token.replace("Bearer ", "");
-
+    // トークン値の空文字チェック
     if token.is_empty() {
-        return (StatusCode::BAD_REQUEST, "").into_response();
+        let msg = Json(json!({ "message": "Bad Request"}));
+        return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response()
     }
 
     // TODO: 認証チェック処理を追加する

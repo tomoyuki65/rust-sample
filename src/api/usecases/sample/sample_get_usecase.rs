@@ -2,6 +2,8 @@
 use axum::{
     http::StatusCode,
     response::{IntoResponse, Json, Response},
+    // request::HeaderMap,
+    // http::header,
 };
 
 // json変換用マクロ
@@ -56,7 +58,11 @@ impl SampleGetUsecase {
         // json形式のメッセージを設定
         let msg = Json(json!({ "message": text}));
 
+        // レスポンスヘッダーに付与する値の設定
+        let x_request_id = ctx.header.get("X-Request-Id");
+        let request_id = x_request_id.expect("-").to_str().unwrap();
+
         // レスポンス結果を設定して戻り値として返す
-        (StatusCode::OK, msg).into_response()
+        (StatusCode::OK, [("X-Request-Id", request_id)], msg).into_response()
     }
 }

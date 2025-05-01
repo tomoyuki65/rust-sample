@@ -17,7 +17,7 @@ use crate::api::handlers::sample::sample_handler::QueryParams;
 pub struct SampleGetPathQueryUsecase;
 
 impl SampleGetPathQueryUsecase {
-    pub async fn exec(&self, id: String, params: QueryParams, _ctx: Context) -> Response {
+    pub async fn exec(&self, id: String, params: QueryParams, ctx: Context) -> Response {
         // テキスト設定
         let text = format!(
             "id: {}, item: {}",
@@ -28,7 +28,11 @@ impl SampleGetPathQueryUsecase {
         // json形式のメッセージを設定
         let msg = Json(json!({ "message": text}));
 
+        // レスポンスヘッダーに付与する値の設定
+        let x_request_id = ctx.header.get("X-Request-Id");
+        let request_id = x_request_id.expect("-").to_str().unwrap();
+
         // レスポンス結果を設定して戻り値として返す
-        (StatusCode::OK, msg).into_response()
+        (StatusCode::OK, [("X-Request-Id", request_id)], msg).into_response()
     }
 }

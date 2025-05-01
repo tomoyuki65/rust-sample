@@ -4,6 +4,9 @@ use axum::{
     routing::{get, post},
 };
 
+// tower_http
+use tower_http::trace::TraceLayer;
+
 // ハンドラー用のモジュール
 use super::handlers::sample::sample_handler;
 
@@ -23,6 +26,26 @@ pub fn router() -> Router {
     // ルーティング
     Router::new()
         .nest("/api/v1", v1)
-        // 共通ミドルウェアの設定
+        // 共通ミドルウェアの設定（下から順番に読み込み）
+        // .layer(middleware::from_fn(common_middleware::auth_middleware))
         .layer(middleware::from_fn(common_middleware::request_middleware))
+        .layer(TraceLayer::new_for_http().on_response(
+            |res: &axum::response::Response,
+             latency: std::time::Duration,
+             _span: &tracing::Span| {
+                // レスポンスヘッダーからX-Request-Idを取得
+                let request_id = match res.headers().get("X-Request-Id") {
+                    Some(value) => value.to_str().unwrap_or("-").to_string(),
+                    None => "-".to_string(),
+                };
+
+                // ログ出力
+                log::info!(
+                    "[request_id={} status=({}) latency={}μs] finish request !!",
+                    request_id,
+                    res.status(),
+                    latency.as_micros()
+                )
+            },
+        ))
 }
