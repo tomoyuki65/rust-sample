@@ -7,6 +7,9 @@ use axum::{
 // 変換用のクレート
 use serde::Deserialize;
 
+// OpenAPI用
+use utoipa::ToSchema;
+
 // 共通コンテキストの構造体
 use crate::api::contexts::context::Context;
 
@@ -21,6 +24,9 @@ use crate::api::usecases::sample::sample_get_path_query_usecase::SampleGetPathQu
 use crate::api::usecases::sample::sample_get_usecase::{SampleCommonService, SampleGetUsecase};
 use crate::api::usecases::sample::sample_post_usecase::SamplePostUsecase;
 
+// 共通エラー用モジュール
+use crate::api::errors::error;
+
 // クエリパラメータ用の構造体
 #[derive(Deserialize, Debug)]
 pub struct QueryParams {
@@ -28,12 +34,45 @@ pub struct QueryParams {
 }
 
 // リクエストボディの構造体
-#[derive(Deserialize, Debug)]
+#[derive(Deserialize, Debug, ToSchema)]
 pub struct RequestBody {
+    #[schema(example = "田中")]
     pub name: String,
 }
 
+// OpenAPI用の定義
+#[derive(ToSchema)]
+struct SampleGetResponseBody {
+    #[allow(dead_code)]
+    #[schema(example = "Sample Hello !!")]
+    message: String,
+}
+
+#[derive(ToSchema)]
+struct SampleGetPathQueryResponseBody {
+    #[allow(dead_code)]
+    #[schema(example = "id: 11, item: book")]
+    message: String,
+}
+
+#[derive(ToSchema)]
+struct SamplePostResponseBody {
+    #[allow(dead_code)]
+    #[schema(example = "name: 田中")]
+    message: String,
+}
+
 // GETメソッド用のAPIサンプル
+#[utoipa::path(
+    get,
+    path = "/api/v1/sample/get",
+    description = "GETメソッドのサンプルAPI",
+    responses(
+        (status = 200, description = "正常終了", body = SampleGetResponseBody),
+        (status = 500, description = "Internal Server Error", body = error::InternalServerErrorResponseBody)
+    ),
+    tag = "sample",
+)]
 pub async fn sample_get(Extension(ctx): Extension<Context>) -> Response {
     // サービスのインスタンス化
     let sample_repo = Box::new(SampleRepository::new());
@@ -49,6 +88,19 @@ pub async fn sample_get(Extension(ctx): Extension<Context>) -> Response {
 }
 
 // GETメソッドかつパスパラメータとクエリパラメータ有りのAPIサンプル
+#[utoipa::path(
+    get,
+    path = "/api/v1/sample/get/{id}",
+    description = "GETメソッドかつパスパラメータとクエリパラメータ有りのサンプルAPI",
+    responses(
+        (status = 200, description = "正常終了", body = SampleGetPathQueryResponseBody),
+    ),
+    params(
+        ("id" = String, Path, description = "sample id"),
+        ("item" = String, Query, description = "sample item"),
+    ),
+    tag = "sample",
+)]
 pub async fn sample_get_path_query(
     Path(id): Path<String>,
     Query(params): Query<QueryParams>,
@@ -60,6 +112,17 @@ pub async fn sample_get_path_query(
 }
 
 // POSTメソッド用のAPIサンプル
+#[utoipa::path(
+    post,
+    path = "/api/v1/sample/post",
+    description = "POSTメソッドのサンプルAPI",
+    responses(
+        (status = 200, description = "正常終了", body = SamplePostResponseBody),
+        (status = 415, description = "Unsupported Media Type"),
+        (status = 422, description = "Unprocessable Entity"),
+    ),
+    tag = "sample",
+)]
 pub async fn sample_post(
     Extension(ctx): Extension<Context>,
     Json(body): Json<RequestBody>,

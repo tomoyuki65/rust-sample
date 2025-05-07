@@ -1,0 +1,186 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "rust-sample API",
+    "description": "Rustのフレームワーク「axum」によるサンプルAPIです。",
+    "license": {
+      "name": ""
+    },
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/v1/sample/get": {
+      "get": {
+        "tags": [
+          "sample"
+        ],
+        "description": "GETメソッドのサンプルAPI",
+        "operationId": "sample_get",
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleGetResponseBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/InternalServerErrorResponseBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sample/get/{id}": {
+      "get": {
+        "tags": [
+          "sample"
+        ],
+        "description": "GETメソッドかつパスパラメータとクエリパラメータ有りのサンプルAPI",
+        "operationId": "sample_get_path_query",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "sample id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "item",
+            "in": "query",
+            "description": "sample item",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SampleGetPathQueryResponseBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/sample/post": {
+      "post": {
+        "tags": [
+          "sample"
+        ],
+        "description": "POSTメソッドのサンプルAPI",
+        "operationId": "sample_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SamplePostResponseBody"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "InternalServerErrorResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Internal Server Error"
+          }
+        }
+      },
+      "RequestBody": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "田中"
+          }
+        }
+      },
+      "SampleGetPathQueryResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "id: 11, item: book"
+          }
+        }
+      },
+      "SampleGetResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "Sample Hello !!"
+          }
+        }
+      },
+      "SamplePostResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "name: 田中"
+          }
+        }
+      }
+    }
+  }
+}

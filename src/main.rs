@@ -1,5 +1,5 @@
 // axum
-use axum::{Router, serve};
+use axum::serve;
 
 // apiモジュール
 mod api;
@@ -25,7 +25,7 @@ async fn main() {
     log::info!("Start rust_api (ENV:{}) !!", config.env);
 
     // サーバー起動
-    let app = Router::new().merge(router());
+    let app = router();
     let addr = format!("0.0.0.0:{}", config.port);
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
     serve(listener, app).await.unwrap();
