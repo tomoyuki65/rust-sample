@@ -41,3 +41,28 @@ docker compose exec api cargo fmt
 docker compose exec api cargo clippy
 ```  
   
+<br />
+  
+## OpenAPIのファイル出力用コマンド
+ローカルサーバー起動後に以下のコマンドを実行し、OpenAPI仕様書をディレクトリ「src/api/openapi」にJSON形式で出力可能です。
+```
+docker compose exec api rust-script ./src/script_openapi.rs
+```  
+  
+<br />
+  
+## 本番環境用のコンテナについて
+本番環境用コンテナをローカルでビルドして確認したい場合は、以下の手順で行って下さい。  
+  
+### 1. コンテナのビルド
+以下のコマンドを実行し、コンテナをビルドします。  
+```
+docker build --no-cache -f ./docker/prod/Dockerfile -t rust-sample:latest .
+```  
+  
+### 2. コンテナの起動
+以下のコマンドを実行し、コンテナを起動します。  
+```
+docker run -d -p 80:8080 --env-file .env.production rust-sample:latest
+```  
+  

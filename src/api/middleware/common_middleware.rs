@@ -1,6 +1,6 @@
 // axum
 use axum::{
-    extract::{Request, Json},
+    extract::{Json, Request},
     http::StatusCode,
     middleware::Next,
     response::{IntoResponse, Response},
@@ -51,17 +51,17 @@ pub async fn _auth_middleware(req: Request, next: Next) -> Response {
         Some(value) => {
             let bearer_token = value.to_str().unwrap();
             bearer_token.replace("Bearer ", "")
-        },
+        }
         None => {
             let msg = Json(json!({ "message": "Bad Request"}));
-            return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response()
-        },
+            return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response();
+        }
     };
 
     // トークン値の空文字チェック
     if token.is_empty() {
         let msg = Json(json!({ "message": "Bad Request"}));
-        return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response()
+        return (StatusCode::BAD_REQUEST, [("X-Request-Id", request_id)], msg).into_response();
     }
 
     // TODO: 認証チェック処理を追加する

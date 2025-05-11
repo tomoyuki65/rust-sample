@@ -20,12 +20,6 @@ use super::handlers::sample::sample_handler;
 // ミドルウェア用のモジュール
 use super::middleware::common_middleware;
 
-use std::io::Write;
-use std::fs::File;
-use std::path::Path;
-// use utopia::{OpenApi, ToSchema};
-use serde_json;
-
 // OpenAPIの設定
 #[derive(OpenApi)]
 #[openapi(
@@ -35,9 +29,13 @@ use serde_json;
         sample_handler::sample_post,
     ),
     components(),
-    info(title = "rust-sample API", version = "1.0", description = "Rustのフレームワーク「axum」によるサンプルAPIです。"),
+    info(
+        title = "rust-sample API",
+        version = "1.0",
+        description = "Rustのフレームワーク「axum」によるサンプルAPIです。"
+    )
 )]
-struct ApiDoc;
+pub struct ApiDoc;
 
 pub fn router() -> Router {
     // 環境変数取得
@@ -67,7 +65,7 @@ pub fn router() -> Router {
                     Some(value) => value.to_str().unwrap_or("-").to_string(),
                     None => "-".to_string(),
                 };
-    
+
                 // ログ出力
                 log::info!(
                     "[request_id={} status=({}) latency={}μs] finish request !!",
@@ -80,13 +78,6 @@ pub fn router() -> Router {
 
     // 本番環境でない場合にOpenAPIを設定
     if config.env != "production" {
-        // OpenAPIをJSON形式でファイルに出力
-        let output_path = Path::new("./src/api/openapi/openapi.json");
-        let json_string = serde_json::to_string_pretty(&ApiDoc::openapi()).unwrap();
-        let file = File::create(output_path);
-        let _ = file.unwrap().write_all(json_string.as_bytes());
-
-        // OpenAPIをルーティングに追加
         let openapi = SwaggerUi::new("/swagger-ui").url("/openapi.json", ApiDoc::openapi());
         return router.merge(openapi);
     }

@@ -21,8 +21,9 @@ pub struct Config {
     pub env: String,
     #[serde(default = "default_port")]
     pub port: u16,
+    #[allow(dead_code)]
     #[serde(default = "default_rust_log")]
-    pub _rust_log: String,
+    pub rust_log: String,
 }
 
 // 環境変数を返す関数
@@ -36,7 +37,7 @@ pub fn get_config() -> Config {
             Config {
                 env: default_env(),
                 port: default_port(),
-                _rust_log: default_rust_log(),
+                rust_log: default_rust_log(),
             }
         }
     }

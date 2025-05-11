@@ -3,6 +3,9 @@
   "info": {
     "title": "rust-sample API",
     "description": "Rustのフレームワーク「axum」によるサンプルAPIです。",
+    "contact": {
+      "name": "Anonymous"
+    },
     "license": {
       "name": ""
     },
