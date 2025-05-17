@@ -1,5 +1,7 @@
 // SeaORM
-use sea_orm::{ActiveModelTrait, ColumnTrait, QueryFilter, Set, entity::EntityTrait, TransactionTrait};
+use sea_orm::{
+    ActiveModelTrait, ColumnTrait, QueryFilter, Set, TransactionTrait, entity::EntityTrait,
+};
 
 // axum
 use axum::http::StatusCode;
@@ -89,7 +91,10 @@ impl UsersRepositoryTrait for UsersRepository {
         let tx = match db.begin().await {
             Ok(tx) => tx,
             Err(err) => {
-                let msg = format!("[UsersRepository.create_user] トランザクション開始エラー: {}", err);
+                let msg = format!(
+                    "[UsersRepository.create_user] トランザクション開始エラー: {}",
+                    err
+                );
                 error(ctx, &msg);
                 return Err(CommonError::CustomError {
                     status_code: StatusCode::INTERNAL_SERVER_ERROR,
@@ -261,7 +266,10 @@ impl UsersRepositoryTrait for UsersRepository {
         let tx = match db.begin().await {
             Ok(tx) => tx,
             Err(err) => {
-                let msg = format!("[UsersRepository.update_user] トランザクション開始エラー: {}", err);
+                let msg = format!(
+                    "[UsersRepository.update_user] トランザクション開始エラー: {}",
+                    err
+                );
                 error(ctx, &msg);
                 return Err(CommonError::CustomError {
                     status_code: StatusCode::INTERNAL_SERVER_ERROR,
@@ -361,7 +369,10 @@ impl UsersRepositoryTrait for UsersRepository {
         let tx = match db.begin().await {
             Ok(tx) => tx,
             Err(err) => {
-                let msg = format!("[UsersRepository.update_user] トランザクション開始エラー: {}", err);
+                let msg = format!(
+                    "[UsersRepository.update_user] トランザクション開始エラー: {}",
+                    err
+                );
                 error(ctx, &msg);
                 return Err(CommonError::CustomError {
                     status_code: StatusCode::INTERNAL_SERVER_ERROR,
