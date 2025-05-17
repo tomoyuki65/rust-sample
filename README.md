@@ -66,8 +66,21 @@ docker compose exec api sea-orm-cli migrate up
 docker compose exec api sea-orm-cli migrate down
 ```  
   
+### 4. マイグレーションファイルの新規作成
+```
+docker compose exec api sea-orm-cli migrate generate ファイル名
+```  
+> ※ファイル名の例「create_table_xxxx」
+  
+### 5. entitiesの追加
+マイグレーション完了後に以下のコマンドを実行し、entitiesの追加が可能です。  
+```
+docker compose exec api sea-orm-cli generate entity -o src/api/entities/tmp --tables xxxx
+```  
+> <span style="color:red">※テーブル名を指定してコマンドを実行し、tmpディレクトリに作成されたファイル内容を手動で追加後、最後にtmpディレクトリを削除して下さい。（entitiesの上書きを防ぐため）</span>
+  
 <br />
-
+  
 ## OpenAPIのファイル出力用コマンド
 ローカルサーバー起動後に以下のコマンドを実行し、OpenAPI仕様書をディレクトリ「src/api/openapi」にJSON形式で出力可能です。
 ```
@@ -79,13 +92,19 @@ docker compose exec api rust-script ./src/script_openapi.rs
 ## 本番環境用のコンテナについて
 本番環境用コンテナをローカルでビルドして確認したい場合は、以下の手順で行って下さい。  
   
-### 1. コンテナのビルド
+### 1. .env.productionの修正
+本番環境用の機密情報を含まない環境変数の設定には「.env.production」を使っていますが、ローカルで確認したい場合はローカル用と同様に機密情報も含む環境変数も追加して下さい。
+```
+DATABASE_URL=postgres://pg-user:pg-password@host.docker.internal:5432/pg-db
+```
+  
+### 2. コンテナのビルド
 以下のコマンドを実行し、コンテナをビルドします。  
 ```
 docker build --no-cache -f ./docker/prod/Dockerfile -t rust-sample:latest .
 ```  
   
-### 2. コンテナの起動
+### 3. コンテナの起動
 以下のコマンドを実行し、コンテナを起動します。  
 ```
 docker run -d -p 80:8080 --env-file .env.production rust-sample:latest
