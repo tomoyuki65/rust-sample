@@ -5,7 +5,7 @@ use axum::{
 };
 
 // tower_http
-use tower_http::trace::TraceLayer;
+use tower_http::{cors::CorsLayer, trace::TraceLayer};
 
 // OpenAPI用
 use utoipa::openapi::security::{Http, HttpAuthScheme, SecurityScheme};
@@ -62,6 +62,23 @@ pub fn router() -> Router {
     // 環境変数取得
     let config = config::get_config();
 
+    // CORS設定
+    let origin = config.allow_origin;
+    let cors = CorsLayer::new()
+        .allow_origin(vec![origin.parse().unwrap()])
+        .allow_methods(vec![
+            "GET".parse().unwrap(),
+            "POST".parse().unwrap(),
+            "PUT".parse().unwrap(),
+            "DELETE".parse().unwrap(),
+            "OPTIONS".parse().unwrap(),
+        ])
+        .allow_headers(vec![
+            "Content-Type".parse().unwrap(),
+            "Authorization".parse().unwrap(),
+        ])
+        .allow_credentials(true);
+
     // APIのグループ「v1」
     let v1 = Router::new()
         .route("/sample/get", get(sample_handler::sample_get))
@@ -105,7 +122,8 @@ pub fn router() -> Router {
                     latency.as_micros()
                 )
             },
-        ));
+        ))
+        .layer(cors);
 
     // 本番環境でない場合にOpenAPIを設定
     if config.env != "production" {

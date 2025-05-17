@@ -18,6 +18,10 @@ fn default_database_url() -> String {
     "postgres://pg-user:pg-password@pg-db:5432/pg-db?sslmode=disable".to_string()
 }
 
+fn default_allow_origin() -> String {
+    "http://localhost:3000".to_string()
+}
+
 // 環境変数の構造体
 #[derive(Deserialize, Debug)]
 pub struct Config {
@@ -28,6 +32,9 @@ pub struct Config {
     #[allow(dead_code)]
     #[serde(default = "default_rust_log")]
     pub rust_log: String,
+    #[allow(dead_code)]
+    #[serde(default = "default_allow_origin")]
+    pub allow_origin: String,
     #[serde(default = "default_database_url")]
     pub database_url: String,
 }
@@ -44,6 +51,7 @@ pub fn get_config() -> Config {
                 env: default_env(),
                 port: default_port(),
                 rust_log: default_rust_log(),
+                allow_origin: default_allow_origin(),
                 database_url: default_database_url(),
             }
         }
