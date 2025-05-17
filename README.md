@@ -42,6 +42,7 @@ docker compose exec api cargo clippy
 ```  
   
 ### 3. テストコードの実行
+<span style="color:red">事前にテスト用環境変数を設定したローカルサーバーを起動（docker compose --env-file ./.env.testing up -d）してから以下のコマンドを使ってテストを実行して下さい</span>  
 ```
 docker compose exec -e CARGO_TEST=testing api cargo test -- --nocapture --test-threads=1
 ```  
