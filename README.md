@@ -41,8 +41,33 @@ docker compose exec api cargo fmt
 docker compose exec api cargo clippy
 ```  
   
+### 3. テストコードの実行
+```
+docker compose exec -e CARGO_TEST=testing api cargo test -- --nocapture
+```  
+  
 <br />
   
+## マイグレーションに関する操作用コマンド
+ローカルサーバー起動中に以下のコマンドを実行可能です。  
+  
+### 1. マイグレーションの状態確認
+```
+docker compose exec api sea-orm-cli migrate status
+```  
+  
+### 2. マイグレーションの実行
+```
+docker compose exec api sea-orm-cli migrate up
+```  
+  
+### 3. ロールバックの実行
+```
+docker compose exec api sea-orm-cli migrate down
+```  
+  
+<br />
+
 ## OpenAPIのファイル出力用コマンド
 ローカルサーバー起動後に以下のコマンドを実行し、OpenAPI仕様書をディレクトリ「src/api/openapi」にJSON形式で出力可能です。
 ```

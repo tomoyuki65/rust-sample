@@ -120,10 +120,292 @@
           }
         }
       }
+    },
+    "/api/v1/user": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "description": "ユーザー作成",
+        "operationId": "create_user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelResponseBody"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomErrorResponseBody"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/user/{uid}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "有効な対象ユーザー取得",
+        "operationId": "get_user_from_uid",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelResponseBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomErrorResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "description": "対象ユーザー更新",
+        "operationId": "update_user",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUserRequestBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserModelResponseBody"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Media Type"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomErrorResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "description": "対象ユーザー削除（論理削除）",
+        "operationId": "delete_user",
+        "parameters": [
+          {
+            "name": "uid",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteUserResponseBody"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomErrorResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "全ての有効なユーザー取得",
+        "operationId": "get_users",
+        "responses": {
+          "200": {
+            "description": "正常終了",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserModelResponseBody"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CustomErrorResponseBody"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
     "schemas": {
+      "CreateUserRequestBody": {
+        "type": "object",
+        "required": [
+          "last_name",
+          "first_name",
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "example": "t.tanaka@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "太郎"
+          },
+          "last_name": {
+            "type": "string",
+            "example": "田中"
+          }
+        }
+      },
+      "CustomErrorResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "エラーメッセージ"
+          }
+        }
+      },
+      "DeleteUserResponseBody": {
+        "type": "object",
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "example": "OK"
+          }
+        }
+      },
       "InternalServerErrorResponseBody": {
         "type": "object",
         "required": [
@@ -183,6 +465,91 @@
             "example": "name: 田中"
           }
         }
+      },
+      "UpdateUserRequestBody": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "t.tanaka@example.com"
+          },
+          "first_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "太郎"
+          },
+          "last_name": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "example": "田中"
+          }
+        }
+      },
+      "UserModelResponseBody": {
+        "type": "object",
+        "required": [
+          "id",
+          "uid",
+          "last_name",
+          "first_name",
+          "email",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-15T13:39:39.348822Z"
+          },
+          "deleted_at": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time",
+            "example": "null"
+          },
+          "email": {
+            "type": "string",
+            "example": "t.tanaka@example.com"
+          },
+          "first_name": {
+            "type": "string",
+            "example": "太郎"
+          },
+          "id": {
+            "type": "integer",
+            "format": "int64",
+            "example": 1
+          },
+          "last_name": {
+            "type": "string",
+            "example": "田中"
+          },
+          "uid": {
+            "type": "string",
+            "example": "719cc8f3-6309-4b5a-b554-b8034358c471"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2025-05-15T13:39:39.348822Z"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
       }
     }
   }

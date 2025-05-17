@@ -41,11 +41,19 @@ mod sample_get_test {
         let sample_get_usecase = SampleGetUsecase {
             service: sample_common_service,
         };
+
+        // リクエストヘッダーの設定
+        let mut headers = HeaderMap::new();
+        headers.insert("X-Request-Id", "XXX-XXX-XXX".parse().unwrap());
+
+        // コンテキストの設定
         let ctx = Context {
-            header: HeaderMap::new(),
+            header: headers,
             method: "GET".to_string(),
             uri: "/api/v1/sample/get".to_string(),
         };
+
+        // ユースケースの実行
         let res = sample_get_usecase.exec(ctx).await;
 
         // レスポンスステータスの検証

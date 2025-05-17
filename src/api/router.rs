@@ -1,14 +1,15 @@
 // axum
 use axum::{
     Router, middleware,
-    routing::{get, post},
+    routing::{delete, get, post, put},
 };
 
 // tower_http
 use tower_http::trace::TraceLayer;
 
 // OpenAPI用
-use utoipa::OpenApi;
+use utoipa::openapi::security::{Http, HttpAuthScheme, SecurityScheme};
+use utoipa::{Modify, OpenApi};
 use utoipa_swagger_ui::SwaggerUi;
 
 // configsモジュール
@@ -16,9 +17,23 @@ use super::configs::config;
 
 // ハンドラー用のモジュール
 use super::handlers::sample::sample_handler;
+use super::handlers::users::users_handler;
 
 // ミドルウェア用のモジュール
 use super::middleware::common_middleware;
+
+// OpenAPIの認証定義
+struct SecurityAddon;
+
+impl Modify for SecurityAddon {
+    fn modify(&self, openapi: &mut utoipa::openapi::OpenApi) {
+        let components = openapi.components.as_mut().unwrap();
+        components.add_security_scheme(
+            "bearerAuth",
+            SecurityScheme::Http(Http::new(HttpAuthScheme::Bearer)),
+        );
+    }
+}
 
 // OpenAPIの設定
 #[derive(OpenApi)]
@@ -27,8 +42,14 @@ use super::middleware::common_middleware;
         sample_handler::sample_get,
         sample_handler::sample_get_path_query,
         sample_handler::sample_post,
+        users_handler::create_user,
+        users_handler::get_users,
+        users_handler::get_user_from_uid,
+        users_handler::update_user,
+        users_handler::delete_user,
     ),
     components(),
+    modifiers(&SecurityAddon),
     info(
         title = "rust-sample API",
         version = "1.0",
@@ -48,13 +69,23 @@ pub fn router() -> Router {
             "/sample/get/{id}",
             get(sample_handler::sample_get_path_query),
         )
-        .route("/sample/post", post(sample_handler::sample_post));
+        .route("/sample/post", post(sample_handler::sample_post))
+        .route("/user", post(users_handler::create_user));
+
+    // 認証有りのAPIのグループ「v1_auth」
+    let v1_auth = Router::new()
+        .route("/users", get(users_handler::get_users))
+        .route("/user/{uid}", get(users_handler::get_user_from_uid))
+        .route("/user/{uid}", put(users_handler::update_user))
+        .route("/user/{uid}", delete(users_handler::delete_user))
+        // 認証用ミドルウェア設定
+        .layer(middleware::from_fn(common_middleware::auth_middleware));
 
     // ルーター設定
     let router = Router::new()
         .nest("/api/v1", v1)
+        .nest("/api/v1", v1_auth)
         // 共通ミドルウェアの設定（下から順番に読み込み）
-        // .layer(middleware::from_fn(common_middleware::auth_middleware))
         .layer(middleware::from_fn(common_middleware::request_middleware))
         .layer(TraceLayer::new_for_http().on_response(
             |res: &axum::response::Response,

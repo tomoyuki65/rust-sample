@@ -35,8 +35,7 @@ pub async fn request_middleware(mut req: Request, next: Next) -> Response {
 }
 
 // 認証用ミドルウェア
-// ※利用する場合に関数名を「auth_middleware」に修正する
-pub async fn _auth_middleware(req: Request, next: Next) -> Response {
+pub async fn auth_middleware(req: Request, next: Next) -> Response {
     // 共通コンテキストからX-Request-Idを取得
     let request_id = match req.extensions().get::<context::Context>() {
         Some(ctx) => {

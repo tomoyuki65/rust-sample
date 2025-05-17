@@ -16,3 +16,6 @@ RUN rustup component add rustfmt
 
 # Rustのスクリプト実行用のライブラリをインストール
 RUN cargo install rust-script
+
+# DB用ORMのCLIをインストール
+RUN cargo install sea-orm-cli@1.1.11

@@ -14,6 +14,10 @@ fn default_rust_log() -> String {
     "info".to_string()
 }
 
+fn default_database_url() -> String {
+    "postgres://pg-user:pg-password@pg-db:5432/pg-db?sslmode=disable".to_string()
+}
+
 // 環境変数の構造体
 #[derive(Deserialize, Debug)]
 pub struct Config {
@@ -24,6 +28,8 @@ pub struct Config {
     #[allow(dead_code)]
     #[serde(default = "default_rust_log")]
     pub rust_log: String,
+    #[serde(default = "default_database_url")]
+    pub database_url: String,
 }
 
 // 環境変数を返す関数
@@ -38,6 +44,7 @@ pub fn get_config() -> Config {
                 env: default_env(),
                 port: default_port(),
                 rust_log: default_rust_log(),
+                database_url: default_database_url(),
             }
         }
     }
