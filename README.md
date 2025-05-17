@@ -43,8 +43,9 @@ docker compose exec api cargo clippy
   
 ### 3. テストコードの実行
 ```
-docker compose exec -e CARGO_TEST=testing api cargo test -- --nocapture
+docker compose exec -e CARGO_TEST=testing api cargo test -- --nocapture --test-threads=1
 ```  
+> ※DBのデータを同期させるため「--test-threads=1」で実行する
   
 <br />
   
