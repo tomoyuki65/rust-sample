@@ -4,7 +4,7 @@ Rustのフレームワーク「axum」によるバックエンドAPI開発用サ
 <br />
   
 ## 要件
-・Rustのバージョンは<span style="color:green">1.86</span>です。  
+・Rustのバージョンは<span style="color:green">1.87</span>です。  
   
 <br />
   

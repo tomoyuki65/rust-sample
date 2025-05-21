@@ -1,4 +1,4 @@
-FROM rust:1.86
+FROM rust:1.87
 
 WORKDIR /app
 
@@ -6,7 +6,6 @@ COPY . .
 
 # ホットリロード用のライブラリをインストール
 RUN cargo install cargo-watch
-# RUN rustup component add cargo-watch
 
 # Rust用のリンターをインストール
 RUN rustup component add clippy

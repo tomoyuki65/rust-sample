@@ -1,7 +1,7 @@
 # ####################
 # # ビルドステージ
 # ####################
-FROM rust:1.86.0-alpine3.21 AS builder
+FROM rust:1.87.0-alpine3.21 AS builder
 
 WORKDIR /build
 
