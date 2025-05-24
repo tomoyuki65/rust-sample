@@ -112,3 +112,8 @@ docker build --no-cache -f ./docker/prod/Dockerfile -t rust-sample:latest .
 docker run -d -p 80:8080 --env-file .env.production rust-sample:latest
 ```  
   
+<br />
+  
+## 参考記事  
+[・RustのaxumでバックエンドAPIを開発する方法まとめ](https://rust.tomoyuki65.com/how-to-develop-api-with-axum-in-rust)  
+  

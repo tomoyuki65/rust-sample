@@ -52,7 +52,7 @@ impl UpdateUserUsecase {
             None => "".to_string(),
         };
 
-        // 全ての有効なユーザー取得処理
+        // 対象ユーザー更新処理
         let user = match self
             .service
             .users_service

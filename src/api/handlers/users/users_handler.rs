@@ -1,7 +1,6 @@
 // axum
 use axum::{
     extract::{Extension, Path},
-    // extract::Extension,
     http::StatusCode,
     response::{IntoResponse, Json, Response},
 };

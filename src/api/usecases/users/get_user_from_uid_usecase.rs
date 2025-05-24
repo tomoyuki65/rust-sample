@@ -33,7 +33,7 @@ impl GetUserFromUidUsecase {
         let request_id = x_request_id.expect("-").to_str().unwrap();
         let res_header = [("X-Request-Id", request_id)];
 
-        // 全ての有効なユーザー取得処理
+        // Uidから有効な対象ユーザー取得処理
         let user = match self
             .service
             .users_service
